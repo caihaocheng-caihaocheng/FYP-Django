@@ -1,0 +1,37 @@
+{% extends "NER/base_template.html" %}
+
+{% load static %}
+
+
+
+{% block content %}
+    <div>
+        <form class="el-form">
+            <div class="el-form-item">
+                <div class="el-form-item_content">
+                    <div class="el-form-item_textarea">
+                        <textarea autocomplete="off" rows="5" placeholder="Please input sentence" class="el-textare_inner" style="min-height: 33px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="el-row">
+                <div class="el-col el-col-12">
+                    <div class="el-form-item">
+                        <label class="el-form-item_label" style="width: 90px;">Entity1</label>
+                        <div class="el-form-item_content" style="margin-left: 90px;">
+                            <div class="el-input">
+                                <input type="text" autocomplete="off" class="el-input_inner">
+                            </div>
+                        </div>
+                        <label class="el-form-item_label" style="width: 90px;">Entity2</label>
+                        <div class="el-form-item_content" style="margin-left: 90px;">
+                            <div class="el-input">
+                                <input type="text" autocomplete="off" class="el-input_inner">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
