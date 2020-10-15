@@ -6,32 +6,103 @@
 
 {% block content %}
     <div>
-        <form class="el-form">
+
+        <form class="el-form" method="post" action="/NRE/SRE/">
+            {% csrf_token %}
             <div class="el-form-item">
                 <div class="el-form-item_content">
                     <div class="el-form-item_textarea">
-                        <textarea autocomplete="off" rows="5" placeholder="Please input sentence" class="el-textare_inner" style="min-height: 33px;"></textarea>
+                        <textarea autocomplete="off" rows="5" placeholder="Please input sentence" class="el-textare_inner" style="min-height: 33px;" name="input-sentence"></textarea>
                     </div>
                 </div>
             </div>
+
             <div class="el-row">
                 <div class="el-col el-col-12">
                     <div class="el-form-item">
                         <label class="el-form-item_label" style="width: 90px;">Entity1</label>
                         <div class="el-form-item_content" style="margin-left: 90px;">
                             <div class="el-input">
-                                <input type="text" autocomplete="off" class="el-input_inner">
+                                <input type="text" autocomplete="off" class="el-input_inner" name="Entity1">
                             </div>
                         </div>
-                        <label class="el-form-item_label" style="width: 90px;">Entity2</label>
-                        <div class="el-form-item_content" style="margin-left: 90px;">
+                    </div>
+                </div>
+                <div class="el-col el-col-12">
+                    <div class="el-form-item">
+                        <label class="el-form-item__label">Entity2</label>
+                        <div class="el-form-item__content" style="margin-left: 90px">
                             <div class="el-input">
-                                <input type="text" autocomplete="off" class="el-input_inner">
+                                <input class="el-input__inner" type="text" autocomplete="off" name="Entity2">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label" style="width: 90px;">NER Model</label>
+                <div class="el-form-item__content" style="margin-left: 90px;">
+                    <div class="el-select">
+                        <div class="el-input el-input__suffix">
+                            <input class="el-input__inner" type="text" readonly="readonly" autocomplete="off" placeholder="Select NER model">
+                            <span class="el-input__suffix">
+                                    <span class="el-input__suffix-inner">
+                                        <i class="el-select__caret el-input__icon el-icon-arrow-up"></i>
+                                    </span>
+                                </span>
+                        </div>
+                    </div>
+                    <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Entity Suggestion" name="submit_NER"></input>
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label" style="width: 90px;">Model</label>
+                <div class="el-form-item__content" style="margin-left: 90px">
+                    <div class="el-select">
+                        <div class="el-input el-input--suffix">
+                            <input class="el-input__inner" type="text" readonly="readonly" autocomplete="off" placeholder="Select RE model">
+                            <span class="el-input__suffix">
+                                <span class="el-input__suffix-inner">
+                                    <i class="el-select__caret el-input__icon el-icon-arrow-up">
+                                    </i>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="el-form-item">
+                <label class="el-form-item__label" style="width: 90px;">Example</label>
+                <div class="el-form-item__content" style="margin-left: 90px">
+                    <div class="el-select">
+                        <div class="el-input el-input--suffix">
+                            <input class="el-input__inner" type="text" readonly="readonly" autocomplete="off" placeholder="Choose Example">
+                            <span class="el-input__suffix">
+                                <span class="el-input__suffix-inner">
+                                    <i class="el-select__caret el-input__icon el-icon-arrow-up">
+
+                                    </i>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            <button class="el-button el-button--primary" type="button">
+                            <span>
+                                Submit
+                                <i class="el-icon-upload el-icon--right">
+                                </i>
+                            </span>
+            </button>
         </form>
+        <div>
+            {{raw_sen | safe}}
+            {{result | safe}}
+            {{whole_sentence | safe}}
+        </div>
     </div>
+
 {% endblock %}
+

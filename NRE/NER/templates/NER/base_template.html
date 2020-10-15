@@ -2,7 +2,7 @@
 <html lang="en">
 {%load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'NER/base_template.css'%}" />
-<link rel="stylesheet" type="text/css" href="{% static 'NER/S_RelationExtraction.css'%}" />
+<!--<link rel="stylesheet" type="text/css" href="{% static 'NER/S_RelationExtraction.css'%}" />-->
 <head>
     <meta charset="UTF-8">
 </head>
@@ -19,16 +19,16 @@
                         <li class="el-submenu is-open" role="menuitem" aria-haspopup="true" aria-expanded="true">
                             <div class="el-submenu_title" style="padding-left: 20px;">
                                 <i class="el-icon-share"></i>
-                                <span>Relation Extraction</span>
+                                <a href="/NRE/" style="color: #383133; text-decoration: none">Relation Extraction</a>
                             </div>
                             <ul class="el-menu el-menu--inline" role="menu">
                                 <li class="el-menu-item" role="menuitem" tabindex="-1" style="padding-left: 40px;">
                                     <i class="el-icon-document"></i>
-                                    <span>Supervised Relation Extraction</span>
+                                    <a href="/NRE/SRE/" style="color: #383133; text-decoration: none">Supervised Relation Extraction</a>
                                 </li>
                                 <li class="el-menu-item" role="menuitem" tabindex="-1" style="padding-left: 40px;">
                                     <i class="el-icon-document"></i>
-                                    <span>Document Relation Extraction</span>
+                                    <a href="/NRE/Document/" style="color: #383133; text-decoration: none">Document Relation Extraction</a>
                                 </li>
 
                             </ul>

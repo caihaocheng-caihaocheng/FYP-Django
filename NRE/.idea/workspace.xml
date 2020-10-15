@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a52a6bbf-648c-479b-b2ce-74997856fbe5" name="Default Changelist" comment="" />
+    <list default="true" id="a52a6bbf-648c-479b-b2ce-74997856fbe5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/static/NER/S_RelationExtraction.css" beforeDir="false" afterPath="$PROJECT_DIR$/NER/static/NER/S_RelationExtraction.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/templates/NER/S_RelationExtraction.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/S_RelationExtraction.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/templates/NER/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/base_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,7 +23,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1ilbciw1YqBdBosAhaFbIH5RHWj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -24,6 +36,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
@@ -39,6 +52,9 @@
       <option name="presentableId" value="Default" />
       <updated>1602485207339</updated>
       <workItem from="1602485211844" duration="10223000" />
+      <workItem from="1602600352418" duration="6954000" />
+      <workItem from="1602642199084" duration="6961000" />
+      <workItem from="1602690240386" duration="2000" />
     </task>
     <servers />
   </component>
