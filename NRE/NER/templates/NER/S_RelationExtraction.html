@@ -12,7 +12,7 @@
             <div class="el-form-item">
                 <div class="el-form-item_content">
                     <div class="el-form-item_textarea">
-                        <textarea autocomplete="off" rows="5" placeholder="Please input sentence" class="el-textare_inner" style="min-height: 33px;" name="input-sentence"></textarea>
+                        <textarea autocomplete="off" rows="5" placeholder="Please input sentence" class="el-textare_inner" style="min-height: 33px;" name="input-sentence">{{return_sentence|safe}}</textarea>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                         <label class="el-form-item_label" style="width: 90px;">Entity1</label>
                         <div class="el-form-item_content" style="margin-left: 90px;">
                             <div class="el-input">
-                                <input type="text" autocomplete="off" class="el-input_inner" name="Entity1">
+                                <input type="text" autocomplete="off" class="el-input_inner" name="submit_Entity1" value={{entity1|safe}}>
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                         <label class="el-form-item__label">Entity2</label>
                         <div class="el-form-item__content" style="margin-left: 90px">
                             <div class="el-input">
-                                <input class="el-input__inner" type="text" autocomplete="off" name="Entity2">
+                                <input class="el-input__inner" type="text" autocomplete="off" name="submit_Entity2" value={{entity2|safe}}>
                             </div>
                         </div>
                     </div>
@@ -52,7 +52,9 @@
                                 </span>
                         </div>
                     </div>
-                    <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Entity Suggestion" name="submit_NER"></input>
+                    <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Entity Suggestion" name="submit_NER">
+
+                    </input>
                 </div>
             </div>
             <div class="el-form-item">
@@ -89,18 +91,11 @@
                     </div>
                     </div>
                 </div>
-            <button class="el-button el-button--primary" type="button">
-                            <span>
-                                Submit
-                                <i class="el-icon-upload el-icon--right">
-                                </i>
-                            </span>
-            </button>
+                <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Relation Suggestion" name="submit_RE"></input>
         </form>
         <div>
-            {{raw_sen | safe}}
-            {{result | safe}}
-            {{whole_sentence | safe}}
+            {{whole_sentence|safe}}
+            {{output_sentence|safe}}
         </div>
     </div>
 

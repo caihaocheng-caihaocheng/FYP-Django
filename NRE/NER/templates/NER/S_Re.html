@@ -1,0 +1,93 @@
+{% extends "NER/base_template.html" %}
+
+{% block content %}
+<div>
+    <form class="el-form" method="post" action="/NRE/SRE/">
+        {% csrf_token %}
+        <div class="el-form-item">
+            <div class="el-form-item__content">
+                <div class="el-textarea">
+                    <textarea autocomplete="off" rows="5" placeholder="Please input sentence" class="el-textarea__inner" style="min-height: 33px;" name="input-sentence">{{return_sentence|safe}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="el-row">
+            <div class="el-col el-col-12">
+                <div class="el-form-item">
+                    <label class="el-form-item__label" style="width: 90px">Entity1</label>
+                    <div class="el-form-item__content" style="margin-left: 90px">
+                        <div class="el-input">
+                            <input class="el-input__inner" type="text" autocomplete="off" name="submit_Entity1" value={{entity1|safe}}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="el-col el-col-12">
+                <div class="el-form-item">
+                    <label class="el-form-item__label" style="width: 90px">Entity2</label>
+                    <div class="el-form-item__content" style="margin-left: 90px">
+                        <div class="el-input">
+                            <input class="el-input__inner" type="text" autocomplete="off" name="submit_Entity2" value={{entity2|safe}}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="el-form-item">
+            <label class="el-form-item__label" style="width: 90px;">NER Model</label>
+            <div class="el-form-item__content" style="margin-left: 90px">
+                <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Bi-LSTM + CRF" name="submit_NER">
+                </input>
+                <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Stanford NLP" name="submit_stanford">
+                </input>
+            </div>
+        </div>
+        <div class="el-form-item">
+            <label class="el-form-item__label" style="width: 90px;">RE Model</label>
+            <div class="el-form-item__content" style="margin-left: 90px;">
+                <div class="el-select">
+                    <div class="el-input el-input--suffix">
+                        <input class="el-input__inner" type="submit" readonly="readonly" autocomplete="off" value="Model1" name="submit_RE">
+                        <span class="el-input__suffix">
+                            <span class="el-input__suffix-inner">
+                                <i class="el-select__caret el-input__icon el-icon-arrow-up">
+
+                                </i>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="el-select-dropdown el-popper" style="display: none; min-width: 229px">
+                        <div class="el-scrollbar" style="">
+                            <div class="el-select-dropdown__wrap el-scrollbar__wrap" style="margin-bottom: -17px; margin-right: -17px;">
+                                <ul class="el-scrollbar__view el-select-dropdown__list">
+                                    <li class="el-select-dropdown__item">
+                                        <span>CNN</span>
+                                    </li>
+                                    <li class="el-select-dropdown__item selected">
+                                        <span>BERT</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="el-scrollbar__bar is-horizontal">
+                                <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+                            </div>
+                            <div class="el-scrollbar__bar is-vertical">
+                                <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="result_div">
+        {{whole_sentence|safe}}
+        {{output_sentence|safe}}
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+

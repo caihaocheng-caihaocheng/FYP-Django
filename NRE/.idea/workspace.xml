@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a52a6bbf-648c-479b-b2ce-74997856fbe5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NER/static/NER/S_RelationExtraction.css" beforeDir="false" afterPath="$PROJECT_DIR$/NER/static/NER/S_RelationExtraction.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/all_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/all_function.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NER/templates/NER/S_RelationExtraction.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/S_RelationExtraction.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NER/templates/NER/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/base_template.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NER/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NER/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +16,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="CSS File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -55,6 +53,9 @@
       <workItem from="1602600352418" duration="6954000" />
       <workItem from="1602642199084" duration="6961000" />
       <workItem from="1602690240386" duration="2000" />
+      <workItem from="1604417900765" duration="4531000" />
+      <workItem from="1604468815342" duration="1385000" />
+      <workItem from="1604496666977" duration="725000" />
     </task>
     <servers />
   </component>
