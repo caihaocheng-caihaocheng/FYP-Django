@@ -38,8 +38,13 @@
             <div class="el-form-item__content" style="margin-left: 90px">
                 <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Bi-LSTM + CRF" name="submit_NER">
                 </input>
+                <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Bi-LSTM + CNN" name="submit_CNN">
+                </input>
+                <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="BERT" name="submit_BERT">
+                </input>
                 <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Stanford NLP" name="submit_stanford">
                 </input>
+                
             </div>
         </div>
         <div class="el-form-item">
@@ -47,11 +52,11 @@
             <div class="el-form-item__content" style="margin-left: 90px;">
                 <div class="el-select">
                     <div class="el-input el-input--suffix">
-                        <input class="el-input__inner" type="submit" readonly="readonly" autocomplete="off" value="Model1" name="submit_RE">
+                        <input class="el-input__inner" type="submit" readonly="readonly" autocomplete="off" value="Model1" name="submit_RE" style="width: 100px;"></input>
+                        <input type="submit" class="el-button el-button--default" style="margin-left: 20px;" value="Openie" name="submit_openie" style="width: 100px;"></input>
                         <span class="el-input__suffix">
                             <span class="el-input__suffix-inner">
                                 <i class="el-select__caret el-input__icon el-icon-arrow-up">
-
                                 </i>
                             </span>
                         </span>
@@ -83,6 +88,20 @@
     <div class="result_div">
         {{whole_sentence|safe}}
         {{output_sentence|safe}}
+    </div>
+
+    <div>
+        <p>
+            China is playing an increasing role in the United Nation
+        </p>
+        <p>
+            He was the son of Máel Dúin mac Máele Fithrich, and grandson of the high king Áed Uaridnach (died 612).
+            entity: Máel Dúin mac Máele Fithrich, Áed Uaridnach
+        </p>
+        <p>
+            Like Siegfried Sassoon, Schuster was of Jewish descent.
+            entity: Siegfried Sassoon, Jewish
+        </p>
     </div>
 
 </div>

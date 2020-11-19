@@ -1,0 +1,68 @@
+{% extends "NER/base_template.html" %}
+
+{% block content %}
+<div data-v-99bfc510="">
+    <div class="el-card is-always-shadow" data-v-99bfc510="">
+        <form class="el-form" data-v-99bfc510="" method="post" action="/NRE/DRE/">
+            {% csrf_token %}
+            <div class="el-card__header">
+                <div data-v-99bfc510="">
+                    <span data-v-99bfc510="">Document</span>
+             </div>
+            </div>
+            <div class="el-card__body">
+                <div class="el-textarea" data-v-99bfc510="">
+                    <textarea class="el-textarea__inner" autocomplete="off" rows="8" placeholder="Please input document." style="min-height: 33px;" name="input-paragraph">{{return_sentence|safe}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div data-v-99bfc510="" style="margin-top: 40px; padding-left: 10px; padding-right: 10px">
+            <label class="el-form-item__label" style="width: 90px;">Model</label>
+            <div class="el-form-item__content" style="margin-left: 90px">
+                </div>
+            <div class="el-form-item" data-v-99bfc510="">
+                <div class="el-form-item__content">
+                    <input class="el-button el-button--primary" data-v-99bfc510="" type="submit" value="BERT-NER" name="BERT-NER">
+                    </input>
+                    <input class="el-button el-button--primary" data-v-99bfc510="" type="submit" value="Openie" name="openie-submit">
+                    </input>
+                    <input class="el-button el-button--primary" data-v-99bfc510="" type="submit" value="RE">
+                    </input>
+                </div>
+            </div>
+    </form>
+    <div id="bar" style="width:1000px; height:600px;"></div>
+    <script>
+        var chart = echarts.init(document.getElementById('bar'), 'white', {renderer: 'canvas'});
+        $(
+            function () {
+                fetchData(chart);
+            }
+        );
+        function fetchData() {
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:8000/bar",
+                dataType: 'json',
+                success: function (result) {
+                    chart.setOption(result.data);
+                }
+            });
+        }
+    </script>
+    
+    <div id="relation_graph"></div>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('relation_graph'));
+
+
+    </script>    
+        <div>
+            Barack Obama was the 44th president of the United States, and the first African American to serve in the office. On October 3 1992, Barack Obama married Michelle Robinson.
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+

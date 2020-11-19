@@ -4,9 +4,7 @@
     <list default="true" id="a52a6bbf-648c-479b-b2ce-74997856fbe5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NER/all_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/all_function.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NER/templates/NER/S_RelationExtraction.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/S_RelationExtraction.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NER/templates/NER/base_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/base_template.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NER/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/NER/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NER/templates/NER/S_Re.html" beforeDir="false" afterPath="$PROJECT_DIR$/NER/templates/NER/S_Re.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +54,7 @@
       <workItem from="1604417900765" duration="4531000" />
       <workItem from="1604468815342" duration="1385000" />
       <workItem from="1604496666977" duration="725000" />
+      <workItem from="1605026478822" duration="1255000" />
     </task>
     <servers />
   </component>
