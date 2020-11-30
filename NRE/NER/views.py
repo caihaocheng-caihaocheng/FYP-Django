@@ -1,6 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
+import sys
+import torch
+
+sys.path.append('../')
+from .rel_extract.extractor import RelationExtractor
+from .rel_extract.model import RelTaggerModel
+from transformers import BertModel
+from transformers import BertTokenizer
+import os
+import pandas as pd
+import json
 
 from .model.data_utils import CoNLLDataset
 from .model.ner_model import NERModel
@@ -36,7 +47,6 @@ print("Successfully import BERT model")
 
 CNN_model = Parser()
 # Create your views here.
-
 def response_as_json(data):
     json_str = json.dumps(data)
     response = HttpResponse(
@@ -46,7 +56,6 @@ def response_as_json(data):
     response["Access-Control-Allow-Origin"] = "*"
     return response
 
-
 def json_response(data, code=200):
     data = {
         "code": code,
@@ -54,7 +63,6 @@ def json_response(data, code=200):
         "data": data,
     }
     return response_as_json(data)
-
 
 def json_error(error_string="error", code=500, **kwargs):
     data = {
@@ -65,9 +73,29 @@ def json_error(error_string="error", code=500, **kwargs):
     data.update(kwargs)
     return response_as_json(data)
 
-
 JsonResponse = json_response
 JsonError = json_error
+
+#======================================================================================================
+_filename = 'NER/save_bert_large_with_squad0'
+#UNCASED = './bert-large-uncased-whole-word-masking-finetuned-squad'
+VOCAB = 'vocab.txt'
+pretrained_weights = 'bert-large-uncased-whole-word-masking-finetuned-squad'
+model_class = BertModel
+tokenizer_class = BertTokenizer
+tokenizer = tokenizer_class.from_pretrained(pretrained_weights)
+UNCASED = 'NER/lyh_bert_model'
+language_model = BertModel.from_pretrained(UNCASED)
+print("Successfully load language model")
+language_model.resize_token_embeddings(len(tokenizer))
+re_model = RelTaggerModel(language_model)
+checkpoint = torch.load(_filename)
+re_model.load_state_dict(checkpoint['model_state_dict'], True)
+print("Successfully load checkpoint")
+relations = ['noble title', 'founding date', 'occupation of a person']
+extractor = RelationExtractor(re_model, tokenizer, relations)
+#=========================================================================================================
+
 
 
 def index(request):
@@ -118,15 +146,17 @@ def NER_page(request):
 		submit_Entity1 = request.POST.get("submit_Entity1")
 		submit_Entity2 = request.POST.get("submit_Entity2")
 		#serve as a input for re method 
+		#w1 = extractor.rank(text='John Smith received an OBE', head='John Smith', tail='OBE')
+		#print(w1)
 		submit_Entity_list = [submit_Entity1, submit_Entity2]
 		return_Entity1 = '"' + submit_Entity1 + '"'
 		return_Entity2 = '"' + submit_Entity2 + '"'
-		formatting_sentence = RE_formatting(input_sentence, submit_Entity_list)
-		print(formatting_sentence)
-		RE_prediction = predict_RE(formatting_sentence)
-		output_sentence = RE_add_span(RE_prediction, submit_Entity_list)
-		front1 = {"relation": RE_prediction, "output_sentence": output_sentence, 
-		"entity1": return_Entity1, "entity2": return_Entity2, "return_sentence": input_sentence }
+		re_result = extractor.rank(text=input_sentence, head=submit_Entity1, tail=submit_Entity2)
+		#formatting_sentence = RE_formatting(input_sentence, submit_Entity_list)
+		#print(formatting_sentence)
+		#RE_prediction = predict_RE(formatting_sentence)
+		#output_sentence = RE_add_span(RE_prediction, submit_Entity_list)
+		front1 = {"relation": re_result[0], "entity1": return_Entity1, "entity2": return_Entity2, "return_sentence": input_sentence }
 		return render(request, "NER/S_Re.html", front1)
 	elif(request.method == "POST" and 'submit_openie' in request.POST):
 		input_sentence = request.POST.get("input-sentence")
@@ -153,9 +183,17 @@ def Document_page(request):
 		global c
 		c = (
 			Graph()
-			.add("", nodes, links, repulsion=8000, edge_symbol= ['circle', 'arrow'])
+			.add("", 
+			nodes, 
+			links, 
+			repulsion=8000, 
+			edge_symbol= ['arrow'], edge_label=opts.LabelOpts(
+        is_show=True, position="middle", formatter="{c}"),
+		is_draggable = True,
+        )
 			.set_global_opts(title_opts=opts.TitleOpts(title="Relation Visulization"))
 			.dump_options_with_quotes()
+
 			)
 		class ChartView(APIView):
 			def get(self, request, *args, **kwargs):

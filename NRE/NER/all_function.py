@@ -403,7 +403,7 @@ def create_link(input_kb):
     for i in range(len(kb_rel_dict)):
         link = opts.GraphLink(source = kb_entity_dict[kb_rel_dict[i][0]], 
                              target = kb_entity_dict[kb_rel_dict[i][2]], 
-                             label_opts = rel_dict[kb_rel_dict[i][1]])
+                             value = rel_dict[kb_rel_dict[i][1]])
         links.append(link)
     return links 
 

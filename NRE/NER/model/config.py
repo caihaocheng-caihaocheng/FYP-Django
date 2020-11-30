@@ -82,7 +82,7 @@ class Config():
     max_iter = None # if not None, max number of examples in Dataset
 
     # vocab (created from dataset with build_data.py)
-    filename_words = "./NER//data/words.txt"
+    filename_words = "./NER/data/words.txt"
     filename_tags = "./NER/data/tags.txt"
     filename_chars = "./NER/data/chars.txt"
 
