@@ -407,10 +407,339 @@ def create_link(input_kb):
         links.append(link)
     return links 
 
+def BERT_return_entity(words_raw, preds):
+    """
+    Maximun for 2 entities 
+    input: words_raw, preds. Both are list class
+    output entity1, entity2
+    """
+    # count how many entity is in the sentence 
+    count = 0
+    for i in range(len(preds)):
+        if("B-" in preds[i]):
+            count += 1
+    #==========================================
+    
+    if count == 0:
+        entity1 = entity2 ='"' + "No entity is suggested!" + '"'
+        return entity1, entity2
+    elif count == 1:
+        temp1 = []
+        for i in range(len(preds)):
+            if(preds[i] != "O"):
+                temp1.append(words_raw[i])
+            else:
+                pass
+        entity1 = " ".join(temp1)
+        entity2 = '"' + "No entity is suggested" + '"'
+        return entity1, entity2
+    elif count==2:
+        temp1 = []
+        temp2 = []
+        temp3 = []
+        for i in range(len(preds)):
+            #遇到以B- 开头的， 先检查temp3 是否为空，空既是里面的是entity1， 否则将temp3 加入到temp1， 然后清空，再放入temp2
+            if("B-" in preds[i]):
+                if (len(temp3) != 0 ):
+                    for w in range(len(temp3)):
+                        temp1.append(temp3[w])
+                    temp3.clear()
+                    temp3.append(words_raw[i])
+                elif(len(temp3) == 0):
+                    temp3.append(words_raw[i])
+            elif("I-" in preds[i]):
+                temp3.append(words_raw[i])
+            else:
+                pass
+        for i in range(len(temp3)):
+            temp2.append(temp3[i])
+        entity1 = " ".join(temp1)
+        entity2 = " ".join(temp2)
+        return entity1, entity2
+    else:
+        entity1 = entity2 = '"' + "Entity exceeded" + '"'
+        return entity1, entity2
+    return entity1, entity2
 
+def BERT_predict(input_sentence, model):
+    result = model.predict(input_sentence)
+    word, predict_result = [], []
+    for i in range(len(result)):
+        word.append(result[i]['word'])
+        predict_result.append(result[i]['tag'])
+    return [word, predict_result]
 
+def split_para(input_sentence):
+    """
+    a function to split a paragraph to sentences
+    """
+    import re
+    s_list = []
+    s_list.append(input_sentence)
+    split_sentence = []
+    for element in s_list: 
+        split_sentence += re.split("(?<=[.!?])\s+", element) 
+    return split_sentence
 
+def sentence_list_re(s_l, model):
+    """
+    input: list of result in dict
+    output: entities and relation in 
+    """
+    triples = []
+    for i in range(len(s_l)):
+        re = model.rank(text = s_l[i]['sentence'], head = s_l[i]['head'], tail = s_l[i]['tail'])[0]
+        triple = [s_l[i]['head'], re[0], s_l[i]['tail']]
+        triples.append(triple)
+    return triples
 
+def BERT_split_para_predict(input_sentence_list, model):
+    Total_result = []
+    for i in range(len(input_sentence_list)):
+        Total_result.append(BERT_predict(input_sentence_list[i], model))
+    return Total_result
+
+def format_bert_ner(input_total_result):
+    """
+    The input should be the result from fun BERT_split_para_predict
+    output: 
+    1. A whole sentence, 
+    2. head and tail in order to use relation extraction
+    Can use list of dictionary as output
+    Example: [[{"sentence":*****, "head": **, "tail": **}],
+    [{"sentence":*****, "head": **, "tail": **}],
+    [{"sentence":*****, "head": **, "tail": **}]]
+    """
+    format_result = []
+    for i in range(len(input_total_result)):
+        sentence = " ".join(input_total_result[i][0])
+        h, t = BERT_return_entity(input_total_result[i][0], input_total_result[i][1])
+        dic = {"sentence": sentence, "head": h, "tail": t}
+        format_result.append(dic)
+    return format_result
+
+def sentence_list_re(s_l, model):
+    """
+    input: list of result in dict
+    output: entities and relation in 
+    """
+    triples = []
+    for i in range(len(s_l)):
+        re = model.rank(text = s_l[i]['sentence'], head = s_l[i]['head'], tail = s_l[i]['tail'])[0]
+        triple = [s_l[i]['head'], re[0], s_l[i]['tail']]
+        triples.append(triple)
+    return triples
+
+def get_triple(kb):
+    triples=[]
+    for i in kb[2]:
+        triples.append([kb[0][i[0]],kb[1][i[1]],kb[0][i[2]]])
+    return triples
+
+def get_noun_list(kb):
+    noun_list=[]
+    for key, value in kb[0].items():
+        noun_list.append(value)
+    return noun_list
+
+def get_noun_type(kb):
+    import json
+    noun_list_of_triple = get_noun_list(kb)
+    #print(noun_list_of_triple)
+    
+    file = open("NER/newyorktimes_openie_politics_Wikidata_noun_records.json", 'r', encoding='utf-8')
+    #print(triple['src_domain'])
+    str_domain = []
+    for line in file.readlines():
+        dic = json.loads(line)
+        str_domain.append(dic)
+    file.close()
+    #print(str_domain[0])
+    
+    noun_type_list=[]
+    for i in range(0,len(str_domain)):
+        for noun,candidate_entity_detail in str_domain[i].items():
+            for each_noun in range(0,len(noun_list_of_triple)):
+                if noun == noun_list_of_triple[each_noun]:
+                    #print(noun)
+                    for candidate_entity, value in candidate_entity_detail.items():
+                        #print(value[1])
+                        noun_type_list.extend(value[1])
+    return set(noun_type_list)
+
+def get_linking_p(kb):
+    import json
+    noun_list_of_triple = get_noun_list(kb)
+    #print(noun_list_of_triple)
+    
+    file = open("NER/newyorktimes_openie_politics_Wikidata_noun_records.json", 'r', encoding='utf-8')
+    #print(triple['src_domain'])
+    str_domain = []
+    for line in file.readlines():
+        dic = json.loads(line)
+        str_domain.append(dic)
+    file.close()
+    #print(str_domain[0])
+    
+    noun_type_list=[]
+    supporting_statement=[]
+    
+    
+    for i in range(0,len(str_domain)):
+        for noun,candidate_entity_detail in str_domain[i].items():
+            for each_noun in range(0,len(noun_list_of_triple)):
+                if noun == noun_list_of_triple[each_noun]:
+                    #print(noun)
+                    for candidate_entity, value in candidate_entity_detail.items():
+                        #no_name_type=0
+                        #print(candidate_entity)
+                        #print(value[1])
+                        if len(value[1])==1:
+                            supporting_statement.append(value[0])
+                            noun_type_list.extend(value[1])
+                        if len(value[1])==0:
+                            supporting_statement.append(value[0])
+                            noun_type_list.append(candidate_entity)
+                            #no_name_type=no_name_type+1
+                        else:
+                            average_statement = int(value[0]/len(value[1]))
+                            for j in value[1]:
+                                supporting_statement.append(average_statement)
+                                noun_type_list.append(j)
+    fin_noun_type_list=[]
+    statement_count=[]
+    for count in range(0,len(supporting_statement)):
+        if noun_type_list[count] not in fin_noun_type_list:
+            fin_noun_type_list.append(noun_type_list[count])
+            statement_count.append(supporting_statement[count])
+        else:
+            for count_type in range(0,len(fin_noun_type_list)):
+                if fin_noun_type_list[count_type]==noun_type_list[count]:
+                    statement_count[count_type]=statement_count[count_type]+supporting_statement[count]
+                    
+    total_linking_statement = 0
+    for i in range(0,len(statement_count)):
+        total_linking_statement = statement_count[i]+ total_linking_statement    
+    
+    
+    entity_dic=dict()
+    for k in range(0,len(fin_noun_type_list)):
+        entity_dic.update([(fin_noun_type_list[k],float(statement_count[k]/total_linking_statement))])
+    return entity_dic
+
+def entity_sim(triple1,triple2,kb):
+    type_1 = get_linking_p(kb)
+    type_2 = get_linking_p(kb)
+    return overlapCoefficientWithProbability(type_1,type_2)
+
+def overlapCoefficientWithProbability(type1, type2):
+    """Overlap Coefficient between dicts, with probability"""
+    list1 = type1.keys()
+    list2 = type2.keys()
+    set1 = set(list1)
+    set2 = set(list2)
+    intersection = set1 & set2
+    upper = 0
+
+    if len(intersection)>0:
+        for entity in intersection:
+            p = (type1[entity]+type2[entity])/2.0
+            upper+=p
+    if len(type1) > len(type2):
+        shorter_len = len(type2)
+    else:
+        shorter_len = len(type1)
+
+    if shorter_len == 0:
+        return 0
+    else:
+        jaccard = float(upper / shorter_len)
+        return jaccard
+
+def type_sim(triple1,triple2,kb):
+    type_list_of_triple_1 = get_noun_type(kb)
+    type_list_of_triple_2 = get_noun_type(kb)
+    return overlapCoefficient(type_list_of_triple_1, type_list_of_triple_2)
+
+def overlapCoefficient(type1, type2):
+    """Overlap Coefficient between lists"""
+
+    set1 = set(type1)
+    set2 = set(type2)
+
+    union = set1 | set2
+    intersection = set1 & set2
+
+    if len(type1) > len(type2):
+        shorter_len = len(type2)
+    else:
+        shorter_len = len(type1)
+
+    # jaccard = float(len(intersection)) / len(union)
+    if shorter_len == 0:
+        return 0
+    else:
+        jaccard = float(len(intersection)) / shorter_len
+        return jaccard
+
+def stringSimilarity(np1, np2):
+    from pyjarowinkler import distance
+    """ Text similarity """
+    return distance.get_jaro_distance(np1, np2, winkler='True', scaling=0.1)
+
+def textSim(triple1, triple2):
+    
+    t1_subject = triple1[0]
+    t2_subject = triple2[0]
+    
+    t1_relation = triple1[1]
+    t2_relation = triple2[1]
+    
+    t1_object = triple1[2]
+    t2_object = triple2[2]
+    
+    stringSim_sub = stringSimilarity(t1_subject, t2_subject)
+    stringSim_obj = stringSimilarity(t1_object, t2_object)
+    stringSim_rel = stringSimilarity(t1_relation, t2_relation)
+    return (stringSim_sub + stringSim_obj + stringSim_rel) / 3
+
+def total_sim(triple1, triple2,kb):
+    return (textSim(triple1,triple2) + type_sim(triple1,triple2,kb) + entity_sim(triple1,triple2,kb))/3
+
+def get_triple_sim(some_triples,kb):
+    import numpy as np
+    triple_sim = []
+    for i in range(0,len(some_triples)):
+        for j in range(i+1, len(some_triples)):
+            triple_sim.append(1-total_sim(some_triples[i],some_triples[j],kb))
+    triple_sim=np.array(triple_sim)
+    return triple_sim
+
+def get_triple_point(some_triples):
+    import numpy as np
+    triple_point=[]
+    for i in range(0,len(some_triples)):
+        #for j in range(i+1, 10):
+        each_sim = []
+        each_sim.append(i)
+        #    each_sim.append(str_domain[j]['_id'])
+        triple_point.append(each_sim)
+    triple_point=np.array(triple_point)
+    return triple_point  
+
+def get_clustered_triples(triple_points, triple_similarities,kb):
+    import scipy.cluster.hierarchy as sch
+    Z=sch.linkage(triple_similarities,method='single') 
+    cluster= sch.fcluster(Z, t=0.5,criterion='inconsistent') 
+    #P = sch.dendrogram(Z)
+    count=[]
+    after_triple = []
+    triples = get_triple(kb)
+    for i in range(0,len(cluster)):
+        if cluster[i] not in count:
+            count.append(cluster[i])
+            after_triple.append(triples[i])
+    return after_triple
 
 
 

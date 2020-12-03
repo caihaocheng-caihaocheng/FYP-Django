@@ -36,6 +36,16 @@ from pyecharts import options as opts
 from pyecharts import options as opts
 from pyecharts.charts import Graph
 
+from pyjarowinkler import distance
+import json,math, nltk
+from nltk.corpus import brown
+from pprint import pprint
+
+import scipy
+import scipy.cluster.hierarchy as sch
+from scipy.cluster.vq import vq,kmeans,whiten
+import numpy as np
+
 config = Config()
 model = NERModel(config)
 model.build()
@@ -92,7 +102,69 @@ re_model = RelTaggerModel(language_model)
 checkpoint = torch.load(_filename)
 re_model.load_state_dict(checkpoint['model_state_dict'], True)
 print("Successfully load checkpoint")
-relations = ['noble title', 'founding date', 'occupation of a person']
+relations = ['editor',
+ 'elector',
+ 'debut participant',
+ 'maintained by',
+ 'commissioned by',
+ 'cast member',
+ 'noble title',
+ 'studied by',
+ 'studies',
+ 'admissible rule in',
+ 'author',
+ 'family',
+ 'has contributing factor',
+ 'named by',
+ 'cause of death',
+ 'owner of',
+ 'solves',
+ 'location',
+ 'chief executive officer',
+ 'lifestyle',
+ 'promoted',
+ 'time period',
+ 'home port',
+ 'record held',
+ 'applies to jurisdiction',
+ 'stated in',
+ 'nominee',
+ 'route of administration',
+ 'mother',
+ 'country of citizenship',
+ 'spouse',
+ 'sex or gender',
+ 'place of death',
+ 'father',
+ 'field of this occupation',
+ 'appears in the form of',
+ 'interested in',
+ 'partnership with',
+ 'professorship',
+ 'manufacturer',
+ 'parliamentary term',
+ 'solved by',
+ 'represented by',
+ 'has part'
+ 'significant event',
+ 'commanded by',
+ 'hair color',
+ 'occupation of a person',
+ 'noble title',
+ 'elector',
+ 'capital of',
+ 'candidate',
+ 'employer',
+ 'type of kinship',
+ 'has cause',     
+ 'country of origin',
+ 'approved by',
+ 'significant person',
+ 'relative',
+ 'work location',
+ 'named after',
+ 'connects with',
+ 'partner',]
 extractor = RelationExtractor(re_model, tokenizer, relations)
 #=========================================================================================================
 
@@ -151,12 +223,12 @@ def NER_page(request):
 		submit_Entity_list = [submit_Entity1, submit_Entity2]
 		return_Entity1 = '"' + submit_Entity1 + '"'
 		return_Entity2 = '"' + submit_Entity2 + '"'
-		re_result = extractor.rank(text=input_sentence, head=submit_Entity1, tail=submit_Entity2)
+		re_result = extractor.rank(text=input_sentence, head=submit_Entity1, tail=submit_Entity2)[0][0]
 		#formatting_sentence = RE_formatting(input_sentence, submit_Entity_list)
 		#print(formatting_sentence)
 		#RE_prediction = predict_RE(formatting_sentence)
-		#output_sentence = RE_add_span(RE_prediction, submit_Entity_list)
-		front1 = {"relation": re_result[0], "entity1": return_Entity1, "entity2": return_Entity2, "return_sentence": input_sentence }
+		output_sentence = RE_add_span(re_result, submit_Entity_list)
+		front1 = {"output_sentence":output_sentence,"relation": re_result, "entity1": return_Entity1, "entity2": return_Entity2, "return_sentence": input_sentence }
 		return render(request, "NER/S_Re.html", front1)
 	elif(request.method == "POST" and 'submit_openie' in request.POST):
 		input_sentence = request.POST.get("input-sentence")
@@ -176,10 +248,19 @@ temp = (
 def Document_page(request):
 	if(request.method=="POST" and 'openie-submit' in request.POST):
 		input_para = request.POST.get("input-paragraph")
-		triples = extract_triple(input_para)
-		KB_result = KB(triples)
-		nodes = create_node(KB_result[0])
-		links = create_link(KB_result)
+		sentence_list = split_para(input_para)
+		#Named Entity Recognition
+		Total_result = BERT_split_para_predict(sentence_list, BERT_model)
+		format_result = format_bert_ner(Total_result)
+		#Relation Extraction
+		s_out = sentence_list_re(format_result, extractor)
+		tr = KB(s_out)
+		#print(tr)
+		f_result1 = get_clustered_triples(get_triple_point(get_triple(tr)), get_triple_sim(get_triple(tr),tr),tr)
+
+		KB_result_test = KB(f_result1)
+		nodes = create_node(KB_result_test[0])
+		links = create_link(KB_result_test)
 		global c
 		c = (
 			Graph()
@@ -198,7 +279,7 @@ def Document_page(request):
 		class ChartView(APIView):
 			def get(self, request, *args, **kwargs):
 				return JsonResponse(json.loads(c))	
-		front = {"return_sentence": input_para, "triples": triples, "nodes": nodes, "links": links}
+		front = {"return_sentence": input_para, "nodes": nodes, "links": links}
 		return render(request, "NER/D_RelationExtraction.html", front)	
 	elif(request.method=="POST" and 'BERT-NER' in request.POST):
 		input_para = request.POST.get("input-paragraph")
